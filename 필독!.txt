@@ -1,1 +1,0 @@
-기존 코드에서 is_muted 삭제 / click_sound, hit_sound, mixer.music 볼륨만 def show_settings -> 글로벌서 조정

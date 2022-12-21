@@ -1,6 +1,6 @@
 import pygame
 import random
-from variables import *
+from properties import *
 
 
 mass = 2

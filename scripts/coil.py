@@ -1,5 +1,5 @@
 import pygame
-from variables import *
+from properties import *
 
 
 class Coil():

@@ -7,12 +7,12 @@ import charge_bar
 import long_button
 import sqlite3
 import os
-from variables import *
+from properties import *
 from bg import Background
 from add_screens import *
 
 
-playing = False
+#playing = False
 
 
 pygame.init()
@@ -44,27 +44,28 @@ class Text():
 
 def main():
 
+    # print(Prop.velocity)
+
     pygame.init()
 
     pygame.display.set_caption("Warrior4")
     pygame.display.set_icon(pygame.image.load("assets/images/icon.png"))
 
-    playing = True
-    replay = True
+    Prop.set_playing(True)
 
     title_sound.play(-1)
 
-    warning_volume = 1
+    #warning_volume = 1
 
-    playing, warning_volume = show_title(warning_volume)
+    show_title()
 
-    if not playing:
+    if not Prop.playing:
         return
     # show_level()
 
-    playing, velocity, obs_speed, warning_volume = show_level(warning_volume)
+    velocity, obs_speed = show_level()
 
-    if not playing:
+    if not Prop.playing:
         return
 
     BG1 = Background()
@@ -101,7 +102,7 @@ def main():
     warning_sound.play(-1)
     warning_sound.set_volume(0)
 
-    while playing:
+    while Prop.playing:
         keys = pygame.key.get_pressed()
 
         is_click = pygame.mouse.get_pressed()
@@ -113,8 +114,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
-                playing = False
-                replay = False
+                Prop.set_playing(False)
+                Prop.set_replay(False)
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -127,10 +128,10 @@ def main():
                     spark.fire_coil()
 
                 if event.key == pygame.K_ESCAPE:
-                    playing, warning_volume = show_settings(warning_volume)
+                    show_settings()
 
-                    if not playing:
-                        replay = False
+                    if not Prop.playing:
+                        Prop.set_replay(False)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -147,11 +148,11 @@ def main():
         if spark.is_visible:
             if is_spark_collide1:
                 if object1.hit_coil():
-                    playing = False
+                    Prop.set_playing(False)
 
             if is_spark_collide2:
                 if object2.hit_coil():
-                    playing = False
+                    Prop.set_playing(False)
 
         is_collide1 = pygame.Rect.colliderect(player.rect, object1.rect)
         is_collide2 = pygame.Rect.colliderect(player.rect, object2.rect)
@@ -172,13 +173,13 @@ def main():
         if player.hp <= 1000:
             hp_bar.color = (240, 0, 0)
 
-            if warning_volume == 1:
+            if Prop.warning:
                 warning_sound.set_volume(0.5)
             else:
                 warning_sound.set_volume(0)
 
             if player.hp <= 0:
-                playing = False
+                Prop.set_playing(False)
 
         player.hp -= 1
 
@@ -211,8 +212,10 @@ def main():
     c.execute("INSERT INTO score VALUES (%d);" % (score))
     conn.commit()
 
-    if replay:
-        if show_score(score, c):
+    if Prop.replay:
+        show_score(score, c)
+
+        if Prop.playing:
             main()
 
     conn.close()

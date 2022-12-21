@@ -1,4 +1,4 @@
-from variables import *
+from properties import *
 import long_button
 import square_button
 
@@ -6,7 +6,7 @@ import square_button
 is_muted = False
 
 
-def show_title(warning_volume):
+def show_title():
     #global playing
 
     Title = title_font.render("WARRIOR4", True, (150, 150, 150))
@@ -23,7 +23,7 @@ def show_title(warning_volume):
     turn_page = False
     mouse_on = False
 
-    playing = True
+    #playing = True
 
     while not turn_page:
 
@@ -43,7 +43,7 @@ def show_title(warning_volume):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
-                playing = False
+                Prop.set_playing(False)
                 turn_page = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -57,9 +57,9 @@ def show_title(warning_volume):
 
                 elif event.key == pygame.K_ESCAPE:
 
-                    playing, warning_volume = show_settings(warning_volume)
+                    show_settings()
 
-                    if not playing:
+                    if not Prop.playing:
                         turn_page = True
 
         start_button.update(mouse_on)
@@ -75,10 +75,8 @@ def show_title(warning_volume):
 
         pygame.display.flip()
 
-    return playing, warning_volume
 
-
-def show_level(warning_volume):
+def show_level():
     velocity, obs_speed = 0, 0  # , playing
 
     easy = long_button.Button()
@@ -96,22 +94,21 @@ def show_level(warning_volume):
     norm_mouse_on = False
     hard_mouse_on = False
 
-    playing = True
     turn_page = False
 
     while not turn_page:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
-                playing = False
+                Prop.set_playing(False)
                 turn_page = True
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
 
-                    playing, warning_volume = show_settings(warning_volume)
+                    show_settings()
 
-                    if not playing:
+                    if not Prop.playing:
                         turn_page = True
 
         mouse_pos = pygame.mouse.get_pos()
@@ -164,7 +161,7 @@ def show_level(warning_volume):
 
         pygame.display.flip()
 
-    return playing, velocity, obs_speed, warning_volume
+    return velocity, obs_speed
 
 
 def show_score(score, c):
@@ -203,7 +200,7 @@ def show_score(score, c):
     turn_page = False
     mouse_on = False
 
-    playing = True
+    #playing = True
 
     gameover_sound.play()
 
@@ -218,6 +215,7 @@ def show_score(score, c):
             if is_click[0]:
                 click_sound.play()
                 pygame.time.wait(100)
+                Prop.set_playing(True)
                 turn_page = True
         else:
             mouse_on = False
@@ -225,7 +223,7 @@ def show_score(score, c):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
-                playing = False
+                Prop.set_playing(False)
                 turn_page = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -235,6 +233,7 @@ def show_score(score, c):
                     click_sound.play()
 
                     pygame.time.wait(100)
+                    Prop.set_playing(True)
                     turn_page = True
 
                 # elif event.key == pygame.K_ESCAPE:
@@ -250,10 +249,8 @@ def show_score(score, c):
 
     gameover_sound.stop()
 
-    return playing
 
-
-def show_settings(warning_volume):
+def show_settings():
 
     global is_muted
 
@@ -261,7 +258,7 @@ def show_settings(warning_volume):
     mute_button.init_button("assets/images/muted.png",
                             "assets/images/not_muted.png", (850, HEIGHT - 120))
 
-    playing = True
+    #playing = True
     turn_page = False
 
     while not turn_page:
@@ -283,7 +280,7 @@ def show_settings(warning_volume):
                     laser_sound.set_volume(1)
                     gameover_sound.set_volume(1)
                     pygame.mixer.music.set_volume(1)
-                    warning_volume = 1
+                    Prop.set_warning(True)
 
                 else:
                     is_muted = True
@@ -293,19 +290,19 @@ def show_settings(warning_volume):
                     laser_sound.set_volume(0)
                     gameover_sound.set_volume(0)
                     pygame.mixer.music.set_volume(0)
-                    warning_volume = 0
+                    Prop.set_warning(False)
                     warning_sound.set_volume(0)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
-                playing = False
+                Prop.set_playing(False)
                 turn_page = True
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     turn_page = True
-                    playing = True
+                    # Prop.set_playing(True)
 
         mute_button.update(is_muted)
 
@@ -313,5 +310,3 @@ def show_settings(warning_volume):
         mute_button.draw()
 
         pygame.display.flip()
-
-    return playing, warning_volume
