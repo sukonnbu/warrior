@@ -166,8 +166,8 @@ def show_score(score, c):
     screen.blit(max_score_text, max_score_rect)
 
     start_button = long_button.Button()
-    start_button.init_button("assets/images/start_button_on.png",
-                             "assets/images/start_button_off.png", (850, HEIGHT - 120))  # replay
+    start_button.init_button("assets/images/restart_button_on.png",
+                             "assets/images/restart_button_off.png", (850, HEIGHT - 120))  # replay
 
     turn_page = False
     mouse_on = False

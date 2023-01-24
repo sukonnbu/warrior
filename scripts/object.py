@@ -3,20 +3,18 @@ import random
 from properties import *
 
 
-speed = 0
-
-
 class Object():
     def __init__(self):
         self.image = ""
         self.rect = ""
         self.type = ""
 
+        self.speed = 0
+
         self.is_visible = True
 
     def set_speed(self):
-        global speed
-        speed = Prop.get_obs_speed()
+        self.speed = Prop.get_obs_speed()
 
     def init(self, start=500, end=2000):
         setting = random.random()
@@ -65,9 +63,8 @@ class Object():
             self.is_visible = True
 
     def update(self, time):
-        global speed
 
-        self.rect.x -= speed + round(time/500)
+        self.rect.x -= self.speed + round(time/500)
 
         if self.rect.x < 0:
             self.is_visible = False
