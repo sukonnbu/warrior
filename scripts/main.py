@@ -21,7 +21,8 @@ pygame.init()
 db_path = os.getenv('APPDATA') + "/.warrior4/warrior4.db"
 
 
-try: conn = sqlite3.connect(db_path)
+try:
+    conn = sqlite3.connect(db_path)
 except:
     os.makedirs(os.getenv('APPDATA') + "/.warrior4")
     conn = sqlite3.connect(db_path)
@@ -63,13 +64,13 @@ def main():
 
     show_title()
 
-    if not Prop.playing:
+    if not Prop.get_playing():
         return
     # show_level()
 
     show_level()
 
-    if not Prop.playing:
+    if not Prop.get_playing():
         return
 
     BG1 = Background()
@@ -106,7 +107,7 @@ def main():
     warning_sound.play(-1)
     warning_sound.set_volume(0)
 
-    while Prop.playing:
+    while Prop.get_playing():
         keys = pygame.key.get_pressed()
 
         is_click = pygame.mouse.get_pressed()
@@ -134,7 +135,7 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     show_settings()
 
-                    if not Prop.playing:
+                    if not Prop.get_playing():
                         Prop.set_replay(False)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -177,7 +178,7 @@ def main():
         if player.hp <= 1000:
             hp_bar.color = (240, 0, 0)
 
-            if Prop.warning:
+            if Prop.get_warning():
                 warning_sound.set_volume(0.5)
             else:
                 warning_sound.set_volume(0)
@@ -186,12 +187,14 @@ def main():
                 Prop.set_playing(False)
 
         player.update()
-        object1.update(clock.get_time())
-        object2.update(clock.get_time())
+
+        add_score = 0
+        add_score += object1.update(clock.get_time())
+        add_score += object2.update(clock.get_time())
 
         spark.update(player.rect.centery)
 
-        score += 10
+        score += 10 + add_score
 
         BG1.fill_bg()
         BG2.fill_bg()
@@ -214,10 +217,10 @@ def main():
     c.execute("INSERT INTO score VALUES (%d);" % (score))
     conn.commit()
 
-    if Prop.replay:
+    if Prop.get_replay():
         show_score(score, c)
 
-        if Prop.playing:
+        if Prop.get_playing():
             main()
 
     conn.close()

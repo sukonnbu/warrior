@@ -16,7 +16,7 @@ class Object():
 
     def set_speed(self):
         global speed
-        speed = Prop.obs_speed
+        speed = Prop.get_obs_speed()
 
     def init(self, start=500, end=2000):
         setting = random.random()
@@ -67,10 +67,14 @@ class Object():
     def update(self, time):
         global speed
 
-        self.rect.x -= speed + round(time/1000)
+        self.rect.x -= speed + round(time/500)
 
         if self.rect.x < 0:
             self.is_visible = False
+
+            return 500  # extra points
+
+        return 0  # no extra points
 
     def collide(self):
         self.is_visible = False

@@ -1,6 +1,7 @@
 from properties import *
 import long_button
 import square_button
+import math
 
 
 is_muted = False
@@ -59,7 +60,7 @@ def show_title():
 
                     show_settings()
 
-                    if not Prop.playing:
+                    if not Prop.get_playing():
                         turn_page = True
 
         start_button.update(mouse_on)
@@ -77,7 +78,7 @@ def show_title():
 
 
 def show_level():
-    #velocity, obs_speed = 0, 0  # , playing
+    # velocity, obs_speed = 0, 0  # , playing
 
     easy = long_button.Button()
     normal = long_button.Button()
@@ -90,13 +91,14 @@ def show_level():
     hard.init_button("assets/images/hard_on.png",
                      "assets/images/hard_off.png", (750, 400))
 
-    easy_mouse_on = False
-    norm_mouse_on = False
-    hard_mouse_on = False
-
     turn_page = False
 
+    Buttons = [easy, normal, hard]
+    Mouse_ons = [False, False, False]  # easy, norm, hard
+
     while not turn_page:
+        screen.fill(BG_COLOR)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
@@ -108,60 +110,30 @@ def show_level():
 
                     show_settings()
 
-                    if not Prop.playing:
+                    if not Prop.get_playing():
                         turn_page = True
 
         mouse_pos = pygame.mouse.get_pos()
         is_click = pygame.mouse.get_pressed()
 
-        if easy.rect.x + 200 > mouse_pos[0] > easy.rect.x and easy.rect.y + 70 > mouse_pos[1] > easy.rect.y:
-            easy_mouse_on = True
+        # Working
+        for i in range(len(Buttons)):
+            if Buttons[i].rect.x + 200 > mouse_pos[0] > Buttons[i].rect.x and Buttons[i].rect.y + 70 > mouse_pos[1] > Buttons[i].rect.y:
+                Mouse_ons[i] = True
 
-            if is_click[0]:
-                click_sound.play()
-                Prop.set_velocity(9)
-                Prop.set_obs_speed(25)
+                if is_click[0]:
+                    click_sound.play()
 
-                turn_page = True
-        else:
-            easy_mouse_on = False
+                    Prop.set_difficulty(i)
 
-        if normal.rect.x + 200 > mouse_pos[0] > normal.rect.x and normal.rect.y + 70 > mouse_pos[1] > normal.rect.y:
-            norm_mouse_on = True
+                    turn_page = True
+            else:
+                Mouse_ons[i] = False
 
-            if is_click[0]:
-                click_sound.play()
-                Prop.set_velocity(8)
-                Prop.set_obs_speed(27)
-
-                turn_page = True
-        else:
-            norm_mouse_on = False
-
-        if hard.rect.x + 200 > mouse_pos[0] > hard.rect.x and hard.rect.y + 70 > mouse_pos[1] > hard.rect.y:
-            hard_mouse_on = True
-
-            if is_click[0]:
-                click_sound.play()
-                Prop.set_velocity(7)
-                Prop.set_obs_speed(30)
-
-                turn_page = True
-        else:
-            hard_mouse_on = False
-
-        easy.update(easy_mouse_on)
-        normal.update(norm_mouse_on)
-        hard.update(hard_mouse_on)
-
-        screen.fill(BG_COLOR)
-        easy.draw()
-        normal.draw()
-        hard.draw()
+            Buttons[i].update(Mouse_ons[i])
+            Buttons[i].draw()
 
         pygame.display.flip()
-
-    #return velocity, obs_speed
 
 
 def show_score(score, c):

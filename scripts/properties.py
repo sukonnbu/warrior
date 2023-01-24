@@ -1,4 +1,5 @@
 import pygame
+import math
 pygame.init()
 
 
@@ -10,20 +11,43 @@ class Prop():
         self.obs_speed = 0
         self.warning = False
 
+        self.difficulty = 0  # 0: easy, 1: normal, 2: hard
+
     def set_playing(self, playing: bool):
         self.playing = playing
-
-    def set_velocity(self, vel: int):
-        self.velocity = vel
-
-    def set_obs_speed(self, speed: int):
-        self.obs_speed = speed
 
     def set_warning(self, warning: bool):
         self.warning = warning
 
     def set_replay(self, replay: bool):
         self.replay = replay
+
+    def set_difficulty(self, difficulty: int):
+        self.difficulty = difficulty
+
+        vel = 9 - difficulty
+        speed = 25 + math.floor(difficulty * 2.5)
+
+        self.velocity = vel
+        self.obs_speed = speed
+
+    def get_playing(self):
+        return self.playing
+
+    def get_velocity(self):
+        return self.velocity
+
+    def get_obs_speed(self):
+        return self.obs_speed
+
+    def get_warning(self):
+        return self.warning
+
+    def get_replay(self):
+        return self.replay
+
+    def get_difficulty(self):
+        return self.difficulty
 
 
 screen_size = WIDTH, HEIGHT = 1000, 600
